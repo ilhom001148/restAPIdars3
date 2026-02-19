@@ -32,12 +32,13 @@ class CarListView(GenericAPIView):
         if max_price:
             car = car.filter(price__lte=max_price)
 
-
         if not car.exists():
             return Response({
-                'status': status.HTTP_404_NOT_FOUND,
+                'status': status.HTTP_200_OK,
                 'message': 'Mashina topilmadi',
-            }, status=status.HTTP_404_NOT_FOUND)
+                'data': [],
+                'count': 0
+            }, status=status.HTTP_200_OK)
 
 
         serializer = self.get_serializer(car, many=True)
@@ -152,6 +153,3 @@ class CarDeleteView(GenericAPIView):
             'status':status.HTTP_200_OK,
             'message':'Car ochirildi',
         })
-
-
-
