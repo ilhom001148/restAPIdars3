@@ -65,7 +65,9 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.email=validated_data.get('email',instance.email)
         instance.phone_number=validated_data.get('phone_number',instance.phone_number)
         instance.address=validated_data.get('address',instance.address)
-        instance.password=validated_data.get('password',instance.password)
+        password = validated_data.get('password', None)
+        if password:
+            instance.set_password(password)
 
         instance.save()
         return instance
