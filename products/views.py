@@ -9,14 +9,17 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework import status
 from .serializers import CarSerializer
 from django.db.models import Q
+from rest_framework.permissions import IsAuthenticated
 
 
 
 class CarListView(GenericAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = CarSerializer
     queryset = Car.objects.all()
 
     def get(self, request):
+        user=request.user
         search = self.request.query_params.get('search', None)
         min_price = self.request.query_params.get('min_price', None)
         max_price = self.request.query_params.get('max_price', None)
@@ -115,7 +118,7 @@ class CarUpdateView(GenericAPIView):
 
     def patch(self,request,pk):
         car=Car.objects.filter(pk=pk).first()
-        serializer=self.get_serializer(car)
+        serializer=self.get_serializer(car,data=request.data)
         if not car:
             data={
                 'status':status.HTTP_404_NOT_FOUND,

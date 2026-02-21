@@ -42,15 +42,30 @@ INSTALLED_APPS = [
     'products',
     'rest_framework',
     'users',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'drf_spectacular',
 ]
 
 
 REST_FRAMEWORK={
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework.authentication.TokenAuthentication'
-    ]
+    ],
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
 }
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'CRUD API',
+    'DESCRIPTION': 'N75 project',
+    'VERSION': '1.0.0',
+}
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

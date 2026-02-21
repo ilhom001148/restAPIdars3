@@ -2,7 +2,8 @@ from rest_framework import serializers,status
 from .models import CustomUser
 from rest_framework.exceptions import ValidationError
 
-class SignUpSerizlizer(serializers.ModelSerializer):
+
+class SignUpSerializer(serializers.ModelSerializer):
     password=serializers.CharField(write_only=True,required=True)
     conf_password=serializers.CharField(write_only=True,required=True)
 
@@ -28,8 +29,9 @@ class SignUpSerizlizer(serializers.ModelSerializer):
             raise ValidationError(response)
         return data
 
+
     def validate_username(self,username):
-        if len(username)<6:
+        if len(username)<7:
             raise ValidationError({'message':'Username kamida 7 ta bolishi kerak'})
         elif not username.isalnum():
             raise ValidationError({'message':'Usernameda ortiqcha belgilar bolmasligi kerak'})
@@ -45,19 +47,27 @@ class SignUpSerizlizer(serializers.ModelSerializer):
 
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CustomUser
+        fields='__all__'
 
 
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CustomUser
+        fields=['username','first_name','last_name','email','phone_number','address','password']
 
+    def update(self,instance,validated_data):
+        instance.username=validated_data.get('username',instance.username)
+        instance.first_name=validated_data.get('first_name',instance.first_name)
+        instance.last_name=validated_data.get('last_name',instance.last_name)
+        instance.email=validated_data.get('email',instance.email)
+        instance.phone_number=validated_data.get('phone_number',instance.phone_number)
+        instance.address=validated_data.get('address',instance.address)
+        instance.password=validated_data.get('password',instance.password)
 
-
-
-
-
-
-
-
-
-
-
+        instance.save()
+        return instance
 
 
